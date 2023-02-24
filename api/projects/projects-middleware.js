@@ -16,15 +16,14 @@ async function validateProjectId(req, res, next) {
 }
 
 function validateProjectDetails(req, res, next) {
-  let { name, description, completed } = req.body;
-  if (name && description) {
+  let { name, description } = req.body;
+  if (!name || !description) {
+    res.status(400).json({ message: "gerekli bilgiler eksik" });
+  } else {
     req.name = name;
     req.description = description;
-    req.completed = completed;
-    next();
-  } else {
-    res.status(400).json({ message: "gerekli bilgiler eksik" });
   }
+  next();
 }
 
 module.exports = { validateProjectId, validateProjectDetails };

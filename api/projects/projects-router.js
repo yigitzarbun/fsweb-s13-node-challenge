@@ -39,7 +39,7 @@ router.put(
       let updated = await projects.get(req.params.id);
       res.status(201).json(updated);
     } catch (error) {
-      res.status(404).json(error);
+      res.status(500).json(error);
     }
   }
 );
