@@ -14,32 +14,35 @@ router.get("/:id", md.validateProjectId, (req, res) => {
   res.status(200).json(req.project);
 });
 
-router.post("/", md.validateProjectDetails, (req, res) => {
-  let project = {
-    name: req.name,
-    description: req.description,
-    completed: req.completed,
-  };
-  projects.insert(project);
-  res.status(200).json(project);
+router.post("/", md.validateProjectDetails, async (req, res, next) => {
+  try {
+    let { name, description, completed } = req;
+    let project = {
+      name: name,
+      description: description,
+      completed: completed,
+    };
+    let createdProject = await projects.insert(project);
+    res.json(createdProject);
+  } catch (error) {
+    next(error);
+  }
 });
 
 router.put(
   "/:id",
   md.validateProjectId,
   md.validateProjectDetails,
-  async (req, res) => {
-    let updatedProject = {
-      name: req.name,
-      description: req.description,
-      completed: req.completed,
-    };
+  async (req, res, next) => {
     try {
-      await projects.update(req.params.id, updatedProject);
-      let updated = await projects.get(req.params.id);
-      res.status(201).json(updated);
+      let updatedData = await projects.update(req.params.id, {
+        name: req.name,
+        description: req.description,
+        completed: req.completed,
+      });
+      res.json(updatedData);
     } catch (error) {
-      res.status(500).json(error);
+      next();
     }
   }
 );

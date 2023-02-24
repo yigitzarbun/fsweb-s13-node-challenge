@@ -16,12 +16,13 @@ async function validateProjectId(req, res, next) {
 }
 
 function validateProjectDetails(req, res, next) {
-  let { name, description } = req.body;
-  if (!name || !description) {
+  let { name, description, completed } = req.body;
+  if (!name || !description || completed == undefined) {
     res.status(400).json({ message: "gerekli bilgiler eksik" });
   } else {
     req.name = name;
     req.description = description;
+    req.completed = completed;
   }
   next();
 }
