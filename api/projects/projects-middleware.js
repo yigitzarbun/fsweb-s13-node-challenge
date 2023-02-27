@@ -17,6 +17,19 @@ async function validateProjectId(req, res, next) {
 
 function validateProjectDetails(req, res, next) {
   let { name, description, completed } = req.body;
+  if (name && description && completed != undefined) {
+    req.name = name;
+    req.description = description;
+    req.completed = completed;
+  } else {
+    res.status(400).json({ message: "gerekli bilgiler eksik" });
+  }
+  next();
+}
+
+/*
+function validateProjectDetails(req, res, next) {
+  let { name, description, completed } = req.body;
   if (!name || !description || completed == undefined) {
     res.status(400).json({ message: "gerekli bilgiler eksik" });
   } else {
@@ -26,5 +39,5 @@ function validateProjectDetails(req, res, next) {
   }
   next();
 }
-
+*/
 module.exports = { validateProjectId, validateProjectDetails };
